@@ -8,6 +8,23 @@ jobs:
   debug_job:
     runs-on: ubuntu-latest
     
+       steps:
+      - name: Diskte Yer Aç (Gereksiz paketleri siler)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # İhtiyacın olmayanları "true" yaparak silebilirsin
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+          
+      - name: Repoyu Klonla (Checkout code)
+        uses: actions/checkout@v4
+        
+    
     steps:
       - name: Repoyu Klonla (Checkout code)
         uses: actions/checkout@v4
