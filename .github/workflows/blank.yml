@@ -1,18 +1,16 @@
 name: SSH Debugging with tmate
 
-# Bu workflow'u GitHub arayüzünden manuel olarak tetiklemek için:
 on:
   workflow_dispatch:
 
 jobs:
   debug_job:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     
     steps:
       - name: Diskte Yer Aç (Gereksiz paketleri siler)
         uses: jlumbroso/free-disk-space@main
         with:
-          # İhtiyacın olmayanları "true" yaparak silebilirsin
           tool-cache: false
           android: true
           dotnet: true
@@ -23,11 +21,8 @@ jobs:
           
       - name: Repoyu Klonla (Checkout code)
         uses: actions/checkout@v4
-        
-      # İstediğiniz diğer kurulum adımlarını buraya ekleyebilirsiniz (örn. Node.js, Python vb.)
       
       - name: Tmate ile SSH Oturumu Başlat
         uses: mxschmitt/action-tmate@v3
-        # Oturumun zaman aşımına uğramasını engellemek veya süresini ayarlamak için parametreler eklenebilir.
         timeout-minutes: 15
         
