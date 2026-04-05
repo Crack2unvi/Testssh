@@ -1,4 +1,4 @@
-name: SSH Debugging with tmate
+name: Tailscale SSH Debugging
 
 on:
   workflow_dispatch:
@@ -8,21 +8,25 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Diskte Yer Aç (Gereksiz paketleri siler)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          tool-cache: false
-          android: true
-          dotnet: true
-          haskell: true
-          large-packages: true
-          docker-images: true
-          swap-storage: true
-          
-      - name: Repoyu Klonla (Checkout code)
+      - name: Repoyu Klonla
         uses: actions/checkout@v4
-      
-      - name: Tmate ile SSH Oturumu Başlat
-        uses: mxschmitt/action-tmate@v3
-      
-        
+
+      - name: Tailscale'e Bağlan
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
+
+      - name: SSH Bilgilerini Göster ve Bekle
+        run: |
+          # Runner'ın Tailscale IP'sini al
+          TS_IP=$(tailscale ip -4)
+          echo "-------------------------------------------------------"
+          echo "Tailscale IP Adresin: $TS_IP"
+          echo "Bağlanmak için terminaline şunu yaz:"
+          echo "ssh runner@$TS_IP"
+          echo "-------------------------------------------------------"
+          
+          # Makineyi açık tutmak için (örneğin 1 saat) bekletiyoruz
+          # Eğer işin biterse GitHub Actions panelinden 'Cancel run' diyebilirsin.
+          sleep 3600
+          
