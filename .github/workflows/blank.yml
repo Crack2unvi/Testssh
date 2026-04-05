@@ -8,6 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+
+      - name: Şifre Belirle
+        run: echo "runner:12345" | sudo chpasswd
+
+    
       - name: Repoyu Klonla
         uses: actions/checkout@v4
 
@@ -28,6 +33,4 @@ jobs:
           
           # Makineyi açık tutmak için (örneğin 1 saat) bekletiyoruz
           # Eğer işin biterse GitHub Actions panelinden 'Cancel run' diyebilirsin.
-           - name: Şifre Belirle
-        run: echo "runner:12345" | sudo chpasswd
-      
+           
