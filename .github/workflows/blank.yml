@@ -1,18 +1,24 @@
-name: Tailscale SSH Debugging
+name: SSH Debugging with Tailscale
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # Manuel başlatmak için
 
 jobs:
   debug_job:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Diskte Yer Aç (Opsiyonel)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
 
-      - name: Şifre Belirle
-        run: echo "runner:12345" | sudo chpasswd
-
-    
       - name: Repoyu Klonla
         uses: actions/checkout@v4
 
@@ -21,16 +27,25 @@ jobs:
         with:
           authkey: ${{ secrets.TAILSCALE_AUTH_KEY }}
 
+      - name: SSH Anahtarını Yetkilendir
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MY_SSH_KEY }}" >> ~/.ssh/authorized_keys
+          chmod 600 ~/.ssh/authorized_keys
+          chmod 700 ~/.ssh
+
       - name: SSH Bilgilerini Göster ve Bekle
         run: |
-          # Runner'ın Tailscale IP'sini al
           TS_IP=$(tailscale ip -4)
-          echo "-------------------------------------------------------"
-          echo "Tailscale IP Adresin: $TS_IP"
-          echo "Bağlanmak için terminaline şunu yaz:"
-          echo "ssh runner@$TS_IP"
-          echo "-------------------------------------------------------"
+          echo "======================================================="
+          echo "BAĞLANTI BAŞARILI!"
+          echo "Terminalinden şu komutu yazarak bağlan:"
+          echo ""
+          echo "  ssh runner@$TS_IP"
+          echo ""
+          echo "Not: İşin bittiğinde GitHub Actions panelinden 'Cancel run' diyebilirsin."
+          echo "======================================================="
           
-          # Makineyi açık tutmak için (örneğin 1 saat) bekletiyoruz
-          # Eğer işin biterse GitHub Actions panelinden 'Cancel run' diyebilirsin.
-           
+          # Makineyi 60 dakika boyunca açık tutar
+          sleep 3600
+          
