@@ -28,5 +28,6 @@ jobs:
           
           # Makineyi açık tutmak için (örneğin 1 saat) bekletiyoruz
           # Eğer işin biterse GitHub Actions panelinden 'Cancel run' diyebilirsin.
-          sleep 3600
-          
+           - name: Şifre Belirle
+        run: echo "runner:12345" | sudo chpasswd
+      
